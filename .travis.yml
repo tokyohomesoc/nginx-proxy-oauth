@@ -1,0 +1,25 @@
+dist: trusty
+sudo: required
+services:
+  - docker
+
+env:
+  global:
+  - DOCKER_VERSION=1.13.1-0~ubuntu-trusty
+  matrix:
+  - TEST_TARGET: nginx-proxy-oauth
+
+before_install:
+  # list docker-engine versions
+  - apt-cache madison docker-engine
+  # upgrade docker-engine to specific version
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y --force-yes docker-engine=${DOCKER_VERSION}
+  - docker version
+  - docker info
+
+script:
+  - make $TEST_TARGET
+
+notifications:
+  slack:
+    secure: dbeJHLp5kNxoqRgd3PTchNtsNcwHBA4C5N32cojYlB5syEdgyoBn7NMiF22bOR7Z8wHkr5ShIUx5oWb3KA7wtu9Iox9BKgc1pFpYYDcwyw80DnQWBxirytmPq0VdKR7T74Fu7+SEaUMMyIFTTjM/4Zy9zlFfFPhgdNeNaYIgTxmq0A9HNn5LvgjkEP7j86Hc4FXDfW+QdBiN3hovU4MFttJj9zVLAvF8aDaBywDC541tkgIozjD3XKXopM5k/J3gBFz3lWg2Dd9pZhCk53I3Ez62DvNw7dfL7lz3VNXZcG8OEfhFblWlgScKEIr72Iie0D5lW+38FZ7574ua5mCaoJwQhzHwar5Z3g8Msf+dRFpbzKXxzmjrkeDi6cXtqL3PrQIqw+39iVqGOEk7focQ/YcuspmPEdeF/64lp8cBwEAxH2b9Ae8wcLbVAI9VVLPmt3qUIogTW7dSZUg+MNz4le+7w+ulO5rxqB2cxwL4xUoUxrZwkZn/cpIr7di58j0u1qXyx8/euS94vomMemW0ZkPNu4+8Tu3BBpjhw4GdzMWlALQf7yqoOVrYMyHM0BGg5tb/Nu4KjbHKKQ+NyZ08my/6GrgxutaxfIJReo1AZiRqd+v2EgP6tG3lyRf7E/KUhg9xmGkpUmt0MieSFCGDx48I7jc2fl8aEjztSZMt9cI=
